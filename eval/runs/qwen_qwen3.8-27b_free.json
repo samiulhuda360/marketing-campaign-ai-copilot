@@ -1,0 +1,309 @@
+{
+  "model": "qwen/qwen3.8-27b:free",
+  "rows": [
+    {
+      "id": "q01",
+      "question": "How many customers are there in total?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.1,
+      "answer": "There are **2,236 customers** in total in the database.\n\n**Recommendation:** Use this full customer base as the denominator when calculating campaign response rates and segment sizes, so all marketing metrics are comparable across reports.",
+      "sql": [
+        "SELECT COUNT(*) AS total_customers FROM customers"
+      ],
+      "rows": [
+        {
+          "total_customers": 2236
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q02",
+      "question": "What share of customers accepted the last campaign offer?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 3.6,
+      "answer": "**14.9%** of customers accepted the last campaign offer \u2014 334 out of 2,236 customers responded.\n\n**Recommendation:** With a response rate under 15%, focus future campaigns on the high-score deciles (e.g., Decile 1\u20132) where the model predicts the highest likelihood of responding, rather than mailing the full base.",
+      "sql": [
+        "SELECT COUNT(*) AS total, SUM(Response) AS responders, ROUND(100.0 * SUM(Response) / COUNT(*), 1) AS pct FROM customers"
+      ],
+      "rows": [
+        {
+          "total": 2236,
+          "responders": 334.0,
+          "pct": 14.9
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q03",
+      "question": "Which segment has the highest average predicted score?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 11.1,
+      "answer": "**\"Meat buyers, big spenders\"** has the highest average predicted score at **30.7%** (0.307), ahead of \"Deal seekers, families\" at 17.6%. The segment contains 429 customers, and its past response rate (30.8%) closely matches its predicted score.\n\n**Recommendation:** Prioritize this segment in your next campaign \u2014 it combines the highest predicted response likelihood with a large, high-spend customer base, so it should deliver the best expected return on marketing spend.",
+      "sql": [
+        "SELECT Segment, avg_score, customers, past_response_rate\nFROM segments\nORDER BY avg_score DESC"
+      ],
+      "rows": [
+        {
+          "Segment": "Meat buyers, big spenders",
+          "avg_score": 0.307,
+          "customers": 429,
+          "past_response_rate": 0.308
+        },
+        {
+          "Segment": "Deal seekers, families",
+          "avg_score": 0.176,
+          "customers": 233,
+          "past_response_rate": 0.189
+        },
+        {
+          "Segment": "Online shoppers, in-store shoppers",
+          "avg_score": 0.141,
+          "customers": 509,
+          "past_response_rate": 0.134
+        },
+        {
+          "Segment": "Recently active, light spenders",
+          "avg_score": 0.118,
+          "customers": 553,
+          "past_response_rate": 0.132
+        },
+        {
+          "Segment": "Lapsed, light spenders",
+          "avg_score": 0.056,
+          "customers": 512,
+          "past_response_rate": 0.033
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q04",
+      "question": "How many customers are in the top score decile?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 1.8,
+      "answer": "There are **224 customers** in the top score decile (Decile = 1), the top 10% most likely to respond to the next offer.\n\n**Recommendation:** Prioritize this group of 224 customers in your next campaign, since they represent the highest predicted response probability and offer the best expected return on marketing spend.",
+      "sql": [
+        "SELECT COUNT(*) AS top_decile_customers FROM customers WHERE Decile = 1"
+      ],
+      "rows": [
+        {
+          "top_decile_customers": 224
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q05",
+      "question": "What is the average income of customers who responded last time compared with those who did not?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 33.2,
+      "answer": "Customers who responded to the last campaign had a higher average income than those who did not:\n\n| Last campaign response | Customers | Avg. income |\n|---|---|---|\n| Responded | 334 | $60,210 |\n| Did not respond | 1,902 | $50,497 |\n\nResponders earn about $9,700 (\u224819%) more on average.\n\n**Recommendation:** Since income is a meaningful differentiator, consider weighting high-income customers more heavily in your next campaign's targeting (e.g., pairing income with the model's Score/Decile) to lift response rates.",
+      "sql": [
+        "SELECT Response, COUNT(*) AS customers, ROUND(AVG(Income), 0) AS avg_income\nFROM customers\nGROUP BY Response\nORDER BY Response DESC"
+      ],
+      "rows": [
+        {
+          "Response": 1,
+          "customers": 334,
+          "avg_income": 60210.0
+        },
+        {
+          "Response": 0,
+          "customers": 1902,
+          "avg_income": 50497.0
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q06",
+      "question": "Which education level has the highest past response rate?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.4,
+      "answer": "**PhD** has the highest past response rate at **20.8%** (101 of 485 customers responded to the last campaign).\n\n| Education | Customers | Responders | Response Rate |\n|-----------|-----------|------------|---------------|\n| PhD | 485 | 101 | 20.8% |\n| Master | 571 | 79 | 13.8% |\n| Graduation | 1,126 | 152 | 13.5% |\n| Basic | 54 | 2 | 3.7% |\n\n**Recommendation:** Prioritize PhD-holding customers in the next campaign, since they responded at roughly 1.5\u00d7 the rate of the next-best group \u2014 and consider pairing them with high-value offers, as their higher education often correlates with higher income and spend.",
+      "sql": [
+        "SELECT Education,\n       COUNT(*) AS customers,\n       SUM(Response) AS responders,\n       ROUND(100.0 * SUM(Response) / COUNT(*), 1) AS response_rate_pct\nFROM customers\nGROUP BY Education\nORDER BY response_rate_pct DESC"
+      ],
+      "rows": [
+        {
+          "Education": "PhD",
+          "customers": 485,
+          "responders": 101.0,
+          "response_rate_pct": 20.8
+        },
+        {
+          "Education": "Master",
+          "customers": 571,
+          "responders": 79.0,
+          "response_rate_pct": 13.8
+        },
+        {
+          "Education": "Graduation",
+          "customers": 1126,
+          "responders": 152.0,
+          "response_rate_pct": 13.5
+        },
+        {
+          "Education": "Basic",
+          "customers": 54,
+          "responders": 2.0,
+          "response_rate_pct": 3.7
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q07",
+      "question": "How many customers have complained in the last two years?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.2,
+      "answer": "**20 customers** have complained in the last two years.\n\n**Recommendation:** Review these 20 customers' recent interactions and reach out with a service recovery offer to reduce churn risk among your most dissatisfied shoppers.",
+      "sql": [
+        "SELECT COUNT(*) AS complainants FROM customers WHERE Complain = 1"
+      ],
+      "rows": [
+        {
+          "complainants": 20
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q08",
+      "question": "What is the total wine spend of customers in the top score decile?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 26.6,
+      "answer": "Customers in the top score decile (Decile = 1, the top 10% most likely to respond) total **$159,496** in wine spend across 224 customers.\n\n**Recommendation:** Since this high-propensity group already shows meaningful wine spend, consider a premium wine bundle or loyalty offer targeted at Decile 1 to convert their predicted response into incremental revenue.",
+      "sql": [
+        "SELECT SUM(MntWines) AS total_wine_spend, COUNT(*) AS customers FROM customers WHERE Decile = 1"
+      ],
+      "rows": [
+        {
+          "total_wine_spend": 159496.0,
+          "customers": 224
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q09",
+      "question": "How many customers have not bought anything for more than 90 days?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.4,
+      "answer": "**197 customers** have not bought anything for more than 90 days (Recency > 90 days).\n\n**Recommendation:** Set up a win-back campaign targeting these 197 dormant customers with a strong incentive (e.g., a high-value deal or free shipping), since they are at risk of churning entirely.",
+      "sql": [
+        "SELECT COUNT(*) AS dormant_customers FROM customers WHERE Recency > 90"
+      ],
+      "rows": [
+        {
+          "dormant_customers": 197
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q10",
+      "question": "If we contact the 200 customers with the highest scores, how many responders should we expect?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 3.2,
+      "answer": "Contacting the 200 highest-scored customers should yield about **104 responders** (sum of their predicted response probabilities = 104.3, i.e., an average score of 52.2% across the top 200).\n\n**Recommendation:** Since the expected response rate is just over half, pair this top-200 outreach with a strong incentive (e.g., a meaningful discount or free shipping) to lift the response rate, and reserve the next tier of high-score customers as a backup list if the first wave underperforms.",
+      "sql": [
+        "SELECT COUNT(*) AS n, ROUND(SUM(Score), 1) AS expected_responders, ROUND(AVG(Score)*100, 1) AS avg_score_pct\nFROM (SELECT Score FROM customers ORDER BY Score DESC LIMIT 200)"
+      ],
+      "rows": [
+        {
+          "n": 200,
+          "expected_responders": 104.3,
+          "avg_score_pct": 52.2
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q11",
+      "question": "Which marital status group spends the most on average?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 25.1,
+      "answer": "**Widow** customers spend the most on average: **$739** per customer (2-year total spend), ahead of Divorced ($613), Single ($607), and Married ($597).\n\n| Marital Status | Customers | Avg Total Spend |\n|---|---|---|\n| Widow | 77 | $739 |\n| Divorced | 231 | $613 |\n| Single | 486 | $607 |\n| Married | 1,442 | $597 |\n\n**Recommendation:** The gap is driven by a small group (77 widows), so treat it as a signal rather than a headline \u2014 but it's worth a targeted test: send a premium/high-value offer to the widow segment and measure response before scaling, since their higher average spend suggests they can support a more expensive basket.",
+      "sql": [
+        "SELECT Marital_Status, COUNT(*) AS customers, ROUND(AVG(TotalSpend)) AS avg_spend\nFROM customers\nGROUP BY Marital_Status\nORDER BY avg_spend DESC"
+      ],
+      "rows": [
+        {
+          "Marital_Status": "Widow",
+          "customers": 77,
+          "avg_spend": 739.0
+        },
+        {
+          "Marital_Status": "Divorced",
+          "customers": 231,
+          "avg_spend": 613.0
+        },
+        {
+          "Marital_Status": "Single",
+          "customers": 486,
+          "avg_spend": 607.0
+        },
+        {
+          "Marital_Status": "Married",
+          "customers": 1442,
+          "avg_spend": 597.0
+        }
+      ],
+      "correct": true
+    },
+    {
+      "id": "q12",
+      "question": "What is the average number of catalogue purchases in each segment?",
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 3.1,
+      "answer": "Average catalogue purchases by segment (2-year window):\n\n| Segment | Avg catalogue purchases | Customers |\n|---|---|---|\n| Meat buyers, big spenders | 6.5 | 429 |\n| Online shoppers, in-store shoppers | 4.0 | 509 |\n| Deal seekers, families | 2.2 | 233 |\n| Lapsed, light spenders | 0.7 | 512 |\n| Recently active, light spenders | 0.6 | 553 |\n\nThe \"Meat buyers, big spenders\" segment is by far the most catalogue-active, averaging 6.5 catalogue purchases \u2014 more than 10\u00d7 the light-spenders.\n\n**Recommendation:** Prioritize catalogue distribution and catalogue-based promotions for the \"Meat buyers, big spenders\" segment, since they clearly respond to that channel; for the light-spenders, catalogue mailings are likely low-yield and budget would be better spent on web or in-store touchpoints.",
+      "sql": [
+        "SELECT Segment, ROUND(AVG(NumCatalogPurchases), 1) AS avg_catalog_purchases, COUNT(*) AS customers\nFROM customers\nGROUP BY Segment\nORDER BY avg_catalog_purchases DESC"
+      ],
+      "rows": [
+        {
+          "Segment": "Meat buyers, big spenders",
+          "avg_catalog_purchases": 6.5,
+          "customers": 429
+        },
+        {
+          "Segment": "Online shoppers, in-store shoppers",
+          "avg_catalog_purchases": 4.0,
+          "customers": 509
+        },
+        {
+          "Segment": "Deal seekers, families",
+          "avg_catalog_purchases": 2.2,
+          "customers": 233
+        },
+        {
+          "Segment": "Lapsed, light spenders",
+          "avg_catalog_purchases": 0.7,
+          "customers": 512
+        },
+        {
+          "Segment": "Recently active, light spenders",
+          "avg_catalog_purchases": 0.6,
+          "customers": 553
+        }
+      ],
+      "correct": true
+    }
+  ],
+  "accuracy": 1.0
+}

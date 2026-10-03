@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "campaign-copilot"
+version = "2.0.0"
+description = "Customer response model with SHAP explanations, an LLM analyst agent over DuckDB, a campaign planner and an MCP server."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = [
+  "pandas>=2.2",
+  "pyarrow>=15",
+  "scikit-learn>=1.5",
+  "shap>=0.46",
+  "duckdb>=1.1",
+  "openai>=1.50",
+  "fastapi>=0.110",
+  "uvicorn>=0.29",
+  "fastmcp>=2.10",
+  "joblib>=1.4",
+  "matplotlib>=3.8",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27", "ruff>=0.6"]
+
+[tool.setuptools]
+packages = ["campaign_copilot"]
+
+[tool.ruff]
+line-length = 150
+target-version = "py310"
+extend-exclude = ["original"]  # the 2023 group notebook is kept exactly as submitted
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]

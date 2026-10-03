@@ -1,0 +1,114 @@
+{
+  "model": "openai/gpt-4.1-mini",
+  "rows": [
+    {
+      "id": "q01",
+      "question": "How many customers are there in total?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.2,
+      "answer": "There are a total of 2,236 customers in the database."
+    },
+    {
+      "id": "q02",
+      "question": "What share of customers accepted the last campaign offer?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 1.9,
+      "answer": "The share of customers who accepted the last campaign offer is 14.9%. \n\nRecommendation: To improve campaign effectiveness, consider targeting customers with higher predicted response scores or tailoring offers based on customer segments."
+    },
+    {
+      "id": "q03",
+      "question": "Which segment has the highest average predicted score?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.3,
+      "answer": "The segment \"Meat buyers, big spenders\" has the highest average predicted score with an average score of 0.307. \n\nRecommendation: Focus marketing efforts and personalized offers on this segment to maximize the response rate to the next campaign."
+    },
+    {
+      "id": "q04",
+      "question": "How many customers are in the top score decile?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 1.9,
+      "answer": "There are 224 customers in the top score decile (Decile = 1). \n\nRecommendation: Focus marketing efforts on this top decile group as they have the highest predicted probability of responding to the next offer."
+    },
+    {
+      "id": "q05",
+      "question": "What is the average income of customers who responded last time compared with those who did not?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.0,
+      "answer": "The average income of customers who responded to the last campaign was $60,210, while the average income of those who did not respond was $50,497. \n\nRecommendation: Targeting customers with higher income might increase the response rate in future campaigns."
+    },
+    {
+      "id": "q06",
+      "question": "Which education level has the highest past response rate?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.3,
+      "answer": "The education level with the highest past response rate is PhD, with a past response rate of 20.8%. \n\nRecommendation: Target marketing campaigns more towards customers with a PhD education level, as they have shown a higher likelihood of responding to offers."
+    },
+    {
+      "id": "q07",
+      "question": "How many customers have complained in the last two years?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 1.6,
+      "answer": "There are 20 customers who have complained in the last two years. \n\nRecommendation: It may be useful to analyze the reasons behind these complaints to improve customer satisfaction and reduce complaint rates."
+    },
+    {
+      "id": "q08",
+      "question": "What is the total wine spend of customers in the top score decile?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.1,
+      "answer": "The total wine spend of customers in the top score decile is $159,496.\n\nRecommendation: Focus marketing efforts on this top decile group to maximize wine sales, as they have a high predicted likelihood of responding to offers."
+    },
+    {
+      "id": "q09",
+      "question": "How many customers have not bought anything for more than 90 days?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 1.7,
+      "answer": "There are 197 customers who have not bought anything for more than 90 days. \n\nRecommendation: Consider targeting these customers with re-engagement campaigns or special offers to encourage them to make a purchase."
+    },
+    {
+      "id": "q10",
+      "question": "If we contact the 200 customers with the highest scores, how many responders should we expect?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 1.8,
+      "answer": "If you contact the 200 customers with the highest scores, you should expect approximately 104 responders based on their predicted probabilities. \n\nRecommendation: Focus your campaign efforts on these top 200 customers to maximize response rates efficiently."
+    },
+    {
+      "id": "q11",
+      "question": "Which marital status group spends the most on average?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.0,
+      "answer": "The marital status group that spends the most on average is Widows, with an average spend of $739. Divorced customers spend $613 on average, Singles spend $607, and Married customers spend $597 on average.\n\nRecommendation: Consider targeting marketing campaigns or special offers specifically to Widow customers, as they have the highest average spending."
+    },
+    {
+      "id": "q12",
+      "question": "What is the average number of catalogue purchases in each segment?",
+      "correct": true,
+      "queries": 1,
+      "errors_recovered": 0,
+      "seconds": 2.4,
+      "answer": "Here is the average number of catalogue purchases in each segment:\n\n| Segment                        | Avg Catalogue Purchases |\n|-------------------------------|------------------------|\n| Deal seekers, families         | 2.2                    |\n| Lapsed, light spenders         | 0.7                    |\n| Meat buyers, big spenders      | 6.5                    |\n| Online shoppers, in-store shoppers | 4.0                |\n| Recently active, light spenders| 0.6                    |\n\nRecommendation: Focus catalogue marketing efforts on the \"Meat buyers, big spenders\" and \"Online shoppers, in-store shoppers\" segments, as they have the highest average catalogue purchases."
+    }
+  ],
+  "accuracy": 1.0
+}

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campaign Copilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Libre+Franklin:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root { --paper: #faf7f2; --card: #ffffff; --ink: #1f2a30; --muted: #6b7378; --line: #e6e0d6; --terra: #c2410c; --terra-soft: #fbe9de;
+          --teal: #0f766e; --teal-soft: #dcefec; --sans: "Libre Franklin", system-ui, sans-serif; --serif: Fraunces, Georgia, serif; --mono: "JetBrains Mono", monospace; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.55 var(--sans); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+  header { border-bottom: 1px solid var(--line); background: #fffdf9; }
+  header .wrap { display: flex; justify-content: space-between; align-items: center; padding-top: 14px; padding-bottom: 14px; gap: 12px; }
+  .brand { font: 700 21px var(--serif); letter-spacing: -.01em; }
+  .brand span { color: var(--terra); }
+  .chip { font: 500 12px var(--mono); color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; background: #fff; }
+  h1 { font: 700 clamp(28px, 4vw, 40px)/1.1 var(--serif); margin: 30px 0 6px; letter-spacing: -.02em; }
+  .lede { color: var(--muted); margin: 0 0 22px; max-width: 760px; }
+  .kpis { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 22px; }
+  .kpi { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+  .kpi b { display: block; font: 700 24px var(--serif); }
+  .kpi span { color: var(--muted); font-size: 13px; }
+  .grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 18px; align-items: start; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
+  h2 { font: 700 19px var(--serif); margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: 13.5px; margin: 0 0 12px; }
+  .row { display: flex; gap: 8px; }
+  input[type=text], input[type=number] { flex: 1; min-width: 0; font: inherit; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+  input:focus { outline: 2px solid var(--teal); border-color: transparent; }
+  button { font: 600 14px var(--sans); border: 0; border-radius: 10px; padding: 11px 16px; cursor: pointer; background: var(--ink); color: #fff; }
+  button:disabled { opacity: .5; cursor: wait; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chips button { background: var(--teal-soft); color: var(--teal); padding: 6px 10px; font-size: 13px; }
+  .answer { margin-top: 14px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .answer table, .data { border-collapse: collapse; width: 100%; font-size: 13.5px; margin: 8px 0; }
+  .answer th, .answer td, .data th, .data td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .data th { color: var(--muted); font-weight: 600; font-size: 12.5px; }
+  details { margin-top: 10px; }
+  summary { cursor: pointer; color: var(--teal); font-weight: 600; font-size: 13.5px; }
+  pre { background: #1f2a30; color: #f3e9dc; padding: 10px 12px; border-radius: 8px; font: 12.5px/1.5 var(--mono); white-space: pre-wrap; margin: 8px 0; }
+  .bar { height: 8px; background: #efe9df; border-radius: 4px; overflow: hidden; min-width: 70px; }
+  .bar i { display: block; height: 100%; background: var(--terra); }
+  .muted { color: var(--muted); }
+  .plan { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; margin-top: 12px; }
+  .seg { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: #fffdf9; }
+  .seg .p { font: 700 12px var(--mono); color: var(--terra); }
+  .seg h3 { font: 700 16px var(--serif); margin: 2px 0 6px; }
+  .tag { display: inline-block; font: 600 11.5px var(--sans); text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; background: var(--teal-soft); color: var(--teal); }
+  .msg { margin-top: 8px; padding: 10px; border-left: 3px solid var(--terra); background: var(--terra-soft); border-radius: 0 8px 8px 0; font-size: 13.5px; }
+  .msg b { display: block; }
+  .expect { display: flex; gap: 14px; align-items: center; margin-top: 12px; font-size: 14px; }
+  .error { color: var(--terra); }
+  .loading { color: var(--muted); }
+  footer { color: var(--muted); font-size: 13px; padding: 10px 0 40px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .kpis { grid-template-columns: repeat(2, 1fr); } }
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">Campaign <span>Copilot</span></div><span class="chip" id="model">loading…</span></div></header>
+<main class="wrap">
+  <h1>Who will respond to the next offer, and why.</h1>
+  <p class="lede">A response model scores every customer, SHAP explains each score, and an AI analyst answers questions by
+    writing SQL over the scored customer base. Ask it anything, or let it plan a campaign.</p>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid">
+    <div>
+      <section class="card">
+        <h2>Ask the analyst</h2>
+        <p class="sub">An LLM agent writes DuckDB SQL, runs it read-only, fixes its own errors and answers from the results.</p>
+        <form id="ask-form" class="row"><input type="text" id="q" maxlength="400" placeholder="Which segment should get a wine offer, and why?" autocomplete="off"><button id="ask-btn">Ask</button></form>
+        <div class="chips" id="ask-chips">
+          <button type="button">Which segment has the highest predicted response, and how big is it?</button>
+          <button type="button">Compare average income of past responders and non-responders</button>
+          <button type="button">How many lapsed customers (over 90 days) are still in the top 3 deciles?</button>
+        </div>
+        <div id="answer"></div>
+      </section>
+      <section class="card">
+        <h2>Plan a campaign</h2>
+        <p class="sub">The planner gets the real segment numbers and returns a structured plan: priorities, offers, channels and copy.</p>
+        <form id="plan-form" class="row"><input type="text" id="goal" maxlength="400" value="Launch a new premium wine and cheese range before the holidays">
+          <input type="number" id="budget" value="300" min="10" max="2000" style="flex:0 0 96px" title="Contact budget"><button id="plan-btn">Plan</button></form>
+        <div id="plan"></div>
+      </section>
+    </div>
+    <div>
+      <section class="card">
+        <h2>Segments</h2>
+        <p class="sub">Behavioural segments (k-means) ranked by average predicted response.</p>
+        <table class="data" id="segments"></table>
+      </section>
+      <section class="card">
+        <h2>Best prospects</h2>
+        <p class="sub">Highest scores, with the model's reasons (SHAP).</p>
+        <table class="data" id="prospects"></table>
+      </section>
+    </div>
+  </div>
+  <footer>Data: 2,236 customers of a grocery superstore (public Kaggle dataset). Scores are out-of-fold and calibrated. <a href="/docs">API docs</a></footer>
+</main>
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pct = (x) => (x * 100).toFixed(1) + "%";
+const money = (x) => "$" + Math.round(x).toLocaleString();
+
+// small markdown: paragraphs, **bold**, and pipe tables
+function md(text) {
+  const lines = esc(text).split("\n");
+  let html = "", table = [];
+  const flush = () => {
+    if (!table.length) return;
+    const rows = table.filter((r) => !/^\|?\s*:?-{2,}/.test(r)).map((r) => r.replace(/^\||\|$/g, "").split("|").map((c) => c.trim()));
+    html += "<table>" + rows.map((r, i) => "<tr>" + r.map((c) => (i ? `<td>${c}</td>` : `<th>${c}</th>`)).join("") + "</tr>").join("") + "</table>";
+    table = [];
+  };
+  for (const l of lines) {
+    if (l.trim().startsWith("|")) { table.push(l.trim()); continue; }
+    flush();
+    if (l.trim()) html += `<p>${l.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")}</p>`;
+  }
+  flush();
+  return html;
+}
+
+async function overview() {
+  const r = await fetch("/api/overview");
+  if (!r.ok) { $("kpis").innerHTML = '<p class="error">Run <code>python -m campaign_copilot train</code> first.</p>'; return; }
+  const { metrics: m, segments, llm_model } = await r.json();
+  $("model").textContent = `LLM: ${llm_model}`;
+  const best = m.models[m.best_model];
+  $("kpis").innerHTML = [
+    [m.rows.toLocaleString(), "customers"], [pct(m.response_rate), "accepted the last offer"],
+    [best.test_roc_auc.toFixed(2), `test ROC-AUC (${m.best_model.toLowerCase()})`],
+    [pct(m.responders_reached.top_20pct), "of responders in the top 20%"],
+    [`${Math.round(m.calibration.expected_responders)} / ${m.calibration.actual_responders}`, "expected / actual responders"],
+  ].map(([b, s]) => `<div class="kpi"><b>${b}</b><span>${s}</span></div>`).join("");
+  const top = Math.max(...segments.map((s) => s.avg_score));
+  $("segments").innerHTML = "<tr><th>Segment</th><th>Customers</th><th>Predicted response</th><th>Avg spend</th></tr>" + segments.map((s) =>
+    `<tr><td>${esc(s.Segment)}</td><td>${s.customers}</td><td><div class="bar"><i style="width:${(s.avg_score / top) * 100}%"></i></div><span class="muted">${pct(s.avg_score)}</span></td><td>${money(s.avg_spend)}</td></tr>`).join("");
+  const p = await (await fetch("/api/customers/top?limit=6")).json();
+  $("prospects").innerHTML = "<tr><th>Id</th><th>Score</th><th>Why (SHAP)</th></tr>" + p.map((c) =>
+    `<tr><td>${c.Id}</td><td>${pct(c.Score)}</td><td>${esc(c.TopReasons)}</td></tr>`).join("");
+}
+
+async function ask(question) {
+  $("q").value = question; $("ask-btn").disabled = true;
+  $("answer").innerHTML = '<div class="answer loading">The analyst is querying the data…</div>';
+  try {
+    const r = await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ question }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || "Request failed");
+    const steps = d.steps.map((s, i) => `<pre>${esc(s.sql)}</pre>${s.error ? `<p class="error">Error, retried: ${esc(s.error)}</p>` :
+      `<p class="muted">${s.rows.length} row${s.rows.length === 1 ? "" : "s"} returned</p>`}`).join("");
+    $("answer").innerHTML = `<div class="answer">${md(d.answer)}<details><summary>SQL it ran (${d.steps.length}) · ${d.seconds}s</summary>${steps}</details></div>`;
+  } catch (e) { $("answer").innerHTML = `<div class="answer error">${esc(e.message)}</div>`; }
+  finally { $("ask-btn").disabled = false; }
+}
+
+async function plan() {
+  $("plan-btn").disabled = true;
+  $("plan").innerHTML = '<p class="loading">Planning from the segment numbers…</p>';
+  try {
+    const r = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goal: $("goal").value, budget: +$("budget").value }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || "Request failed");
+    const e = d.expected_responders;
+    $("plan").innerHTML = `<p>${esc(d.summary)}</p>
+      <div class="expect"><span>Contacting the top <b>${d.budget}</b> scored customers: <b>${Math.round(e.top_scored)}</b> expected responders</span>
+      <span class="muted">vs ${Math.round(e.random)} at random (${(e.top_scored / e.random).toFixed(1)}×)</span></div>
+      <div class="plan">${d.segments.map((s) => `<div class="seg"><div class="p">PRIORITY ${s.priority}</div><h3>${esc(s.segment)}</h3>
+        <span class="tag">${esc(s.channel)}</span> <span class="muted">${s.facts.customers} customers · ${pct(s.facts.avg_score)} predicted</span>
+        <p>${esc(s.why)}</p><p><b>Offer:</b> ${esc(s.offer)}</p><div class="msg"><b>${esc(s.subject)}</b>${esc(s.message)}</div></div>`).join("")}</div>`;
+  } catch (e) { $("plan").innerHTML = `<p class="error">${esc(e.message)}</p>`; }
+  finally { $("plan-btn").disabled = false; }
+}
+
+$("ask-form").addEventListener("submit", (e) => { e.preventDefault(); if ($("q").value.trim().length > 2) ask($("q").value.trim()); });
+$("ask-chips").addEventListener("click", (e) => { if (e.target.tagName === "BUTTON") ask(e.target.textContent); });
+$("plan-form").addEventListener("submit", (e) => { e.preventDefault(); plan(); });
+overview();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{"id": "q01", "question": "How many customers are there in total?", "gold_sql": "SELECT COUNT(*) FROM customers"}
+{"id": "q02", "question": "What share of customers accepted the last campaign offer?", "gold_sql": "SELECT AVG(Response) FROM customers"}
+{"id": "q03", "question": "Which segment has the highest average predicted score?", "gold_sql": "SELECT Segment FROM segments ORDER BY avg_score DESC LIMIT 1"}
+{"id": "q04", "question": "How many customers are in the top score decile?", "gold_sql": "SELECT COUNT(*) FROM customers WHERE Decile = 1"}
+{"id": "q05", "question": "What is the average income of customers who responded last time compared with those who did not?", "gold_sql": "SELECT Response, AVG(Income) FROM customers GROUP BY Response", "label_columns": ["Response"]}
+{"id": "q06", "question": "Which education level has the highest past response rate?", "gold_sql": "SELECT Education FROM customers GROUP BY Education ORDER BY AVG(Response) DESC LIMIT 1"}
+{"id": "q07", "question": "How many customers have complained in the last two years?", "gold_sql": "SELECT COUNT(*) FROM customers WHERE Complain = 1"}
+{"id": "q08", "question": "What is the total wine spend of customers in the top score decile?", "gold_sql": "SELECT SUM(MntWines) FROM customers WHERE Decile = 1"}
+{"id": "q09", "question": "How many customers have not bought anything for more than 90 days?", "gold_sql": "SELECT COUNT(*) FROM customers WHERE Recency > 90"}
+{"id": "q10", "question": "If we contact the 200 customers with the highest scores, how many responders should we expect?", "gold_sql": "SELECT SUM(Score) FROM (SELECT Score FROM customers ORDER BY Score DESC LIMIT 200)"}
+{"id": "q11", "question": "Which marital status group spends the most on average?", "gold_sql": "SELECT Marital_Status FROM customers GROUP BY Marital_Status ORDER BY AVG(TotalSpend) DESC LIMIT 1"}
+{"id": "q12", "question": "What is the average number of catalogue purchases in each segment?", "gold_sql": "SELECT Segment, AVG(NumCatalogPurchases) FROM customers GROUP BY Segment"}
