@@ -8,7 +8,7 @@
 **Predict which customers will respond to a marketing offer, explain every prediction, and ask an AI analyst
 agent questions about the customer base in plain English.** A propensity model with SHAP explanations, a
 tool-calling LLM agent that writes and runs SQL on DuckDB, an AI campaign planner with structured output,
-and an MCP server so Claude, Cursor or ChatGPT can use it all as tools.
+and an MCP server so any AI assistant that speaks the Model Context Protocol can use it all as tools.
 
 ![Dashboard: KPIs, the AI analyst answering "How many lapsed customers are still in the top 3 deciles?" with the SQL it ran, segments ranked by predicted response, and the best prospects with SHAP reasons](docs/screenshots/dashboard.png)
 
@@ -95,7 +95,8 @@ python -m campaign_copilot report         # regenerate the charts
 Free option: `LLM_MODEL=qwen/qwen3.8-27b:free` on OpenRouter scored 12/12 (rate-limited). Fully local: run Ollama and
 set `LLM_BASE_URL=http://localhost:11434/v1`.
 
-**Use it from Claude Desktop (MCP)**: add to `claude_desktop_config.json`:
+**Use it from an MCP client** (Cursor, VS Code, ChatGPT and other desktop assistants). For example, in Cursor's
+`.cursor/mcp.json`:
 
 ```json
 {
@@ -105,7 +106,7 @@ set `LLM_BASE_URL=http://localhost:11434/v1`.
 }
 ```
 
-Then ask Claude things like *"Which segment has the most high-scoring customers who haven't bought in 60 days?"*;
+Then ask the assistant things like *"Which segment has the most high-scoring customers who haven't bought in 60 days?"*;
 it calls `run_sql` and the other tools itself.
 
 ## Project layout

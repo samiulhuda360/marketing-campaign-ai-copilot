@@ -6,7 +6,7 @@
     plan      ask the AI planner for a campaign plan
     eval      measure the analyst's accuracy on questions with known answers
     serve     run the dashboard and API on http://127.0.0.1:8000
-    mcp       run the MCP server (stdio) for Claude Desktop, Cursor and other MCP clients
+    mcp       run the MCP server (stdio) for Cursor, VS Code and other MCP clients
 """
 
 from __future__ import annotations

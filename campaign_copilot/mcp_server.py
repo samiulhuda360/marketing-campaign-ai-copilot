@@ -1,5 +1,5 @@
 """MCP server: the scored customer base and the response model as tools for any AI assistant
-(Claude Desktop, Claude Code, Cursor, ChatGPT and other Model Context Protocol clients).
+that supports the Model Context Protocol (Cursor, VS Code, ChatGPT desktop and others).
 
     python -m campaign_copilot mcp            # stdio transport, for desktop clients
 
