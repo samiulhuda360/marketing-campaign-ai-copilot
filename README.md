@@ -5,26 +5,75 @@
 ![MCP](https://img.shields.io/badge/MCP-server-c2410c)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
-**Predict which customers will respond to a marketing offer, explain every prediction, and ask an AI analyst
-agent questions about the customer base in plain English.** A propensity model with SHAP explanations, a
-tool-calling LLM agent that writes and runs SQL on DuckDB, an AI campaign planner with structured output,
-and an MCP server so any AI assistant that speaks the Model Context Protocol can use it all as tools. It is built for
-marketing and CRM teams who need to decide who to contact and why, and it runs on the public Superstore Marketing
-Campaign dataset of 2,240 grocery customers.
-
 ![Dashboard: KPIs, the AI analyst answering "How many lapsed customers are still in the top 3 deciles?" with the SQL it ran, segments ranked by predicted response, and the best prospects with SHAP reasons](docs/screenshots/dashboard.png)
+
+*The dashboard. Along the top: how well the model picks out the customers who will say yes. Left: a question asked
+in plain English, with the answer, a suggested next step and the database query behind it. Right: customer groups
+ranked by how likely they are to respond.*
+
+## What it does
+
+Campaign Copilot tells a shop which customers are most likely to take up its next offer, and why. You can ask it
+questions about your customers in everyday English and get answers straight from the data, and it can draft a
+whole campaign: who to contact, what to offer, how to reach them and what to say.
+
+## A real-life example
+
+**Sara** runs marketing for **Acme Grocery**, which has about 2,240 regular customers.
+
+- **Before:** Sara sent each offer to everyone. Only about 15 in every 100 customers said yes (14.9% took up the last
+  offer), so most of the postage, printing and discounts went to people who were never going to buy. Simple
+  questions like "how many of our best customers have gone quiet?" meant asking an analyst and waiting.
+- **With this project:** she opens the dashboard. Every customer has a score for how likely they are to respond,
+  with the reasons in plain words, such as *"total spend; income; meat spend"*. She types questions in the
+  **Ask the analyst** box and gets the answer with the query it ran, so she can check it. For a new premium wine and
+  cheese range she types the goal and a budget of 300 contacts, and gets a plan: which customer groups to target, the
+  offer, the channel and the message for each.
+- **After:** contacting the top-scored 20% of customers reaches 70% of everyone who would respond, 3.5 times what a
+  random 20% would reach. For the wine and cheese launch, the 300 best-scored customers are expected to give 143
+  replies, against 45 if she picked 300 at random. In testing, the analyst answered all 12 business questions
+  correctly.
+
+![A four-step slideshow of the dashboard: the headline numbers, a question answered in plain English, customer groups ranked by likely response, and a campaign plan for 300 contacts](docs/screenshots/campaign-tour.gif)
+
+*Sara's tour in four real screens: how good the predictions are, a question answered in plain English, the customer
+groups worth targeting, and a campaign plan that expects 143 replies from 300 contacts instead of 45.*
+
+## How you would use it
+
+1. Someone technical installs it and starts the dashboard once (see [Getting started](#getting-started)); after
+   that, open http://127.0.0.1:8000 in your web browser.
+2. Read the top row: how many customers there are, how many took the last offer, and how well the model ranks them.
+3. In **Ask the analyst**, type a question such as *"Which segment should get a wine offer, and why?"*, or click an
+   example, and press **Ask**. You get a short answer, one recommendation and the query it used.
+4. In **Plan a campaign**, describe the goal, enter how many customers you can afford to contact and press
+   **Plan**. You get a plan with priorities, offers, channels and ready-to-edit message copy, plus how many replies
+   to expect compared with contacting people at random.
+5. Use **Segments** and **Best prospects** to see the customer groups and the individual customers most likely to
+   respond, each with the reasons.
+
+The commands, the API and the AI-assistant connection are in [Usage](#usage) further down.
+
+## Overview
+
+**Predict which customers will respond to a marketing offer, explain every prediction, and ask an AI analyst
+agent questions about the customer base in plain English.** A propensity model (it predicts how likely each customer is to respond) with SHAP explanations (the facts that pushed each score up), a
+tool-calling LLM agent (an AI chat model that can run tools by itself) that writes and runs SQL (database queries) on DuckDB (a small built-in database), an AI campaign planner with structured output (answers in a fixed, machine-readable format),
+and an MCP server so any AI assistant that speaks the Model Context Protocol (a standard way for AI assistants to use outside tools) can use it all as tools. It is built for
+marketing and CRM (customer relationship) teams who need to decide who to contact and why, and it runs on the public Superstore Marketing
+Campaign dataset of 2,240 grocery customers.
 
 ## Key features
 
-- **Response model:** a random forest chosen by stratified 5-fold cross-validation over logistic regression and
-  gradient boosting. **Test ROC-AUC 0.89**; contacting the top 20% of customers reaches **70% of all responders**,
+- **Response model:** a random forest chosen by stratified 5-fold cross-validation (training and testing five times on different slices of the data) over logistic regression and
+  gradient boosting. **Test ROC-AUC 0.89** (how well it ranks responders above non-responders: 1.0 is perfect, 0.5 is guessing); contacting the top 20% of customers reaches **70% of all responders**,
   3.5 times the random rate.
 - **Out-of-fold scores:** every customer is scored by a model trained on the other folds, so no score comes from a
-  model that saw that customer. The scores are calibrated probabilities: they add up to **338 expected responders
+  model that saw that customer. The scores are calibrated probabilities (a score of 30% really means about 30 in 100 such customers respond): they add up to **338 expected responders
   against 334 actual**.
 - **Explainable:** SHAP gives every customer plain-English reasons, for example *"total spend (2,077); income
   (92,859); meat spend (921)"*.
-- **Behavioural segments:** k-means clusters named after their two most distinctive traits, such as "Meat buyers, big
+- **Behavioural segments:** k-means clusters (groups of customers who shop alike) named after their two most distinctive traits, such as "Meat buyers, big
   spenders".
 - **AI analyst agent:** LLM tool calling plus DuckDB text-to-SQL with read-only guardrails. A failed query goes back to
   the model with its error so the model can correct it, and every answer comes with the SQL it ran. **12/12 correct**
